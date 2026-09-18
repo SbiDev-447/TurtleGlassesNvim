@@ -6,6 +6,12 @@ local M = {}
 --- @param palette table  a variant from lua/turtle-glasses/palette.lua
 function M.groups(palette)
   local c = palette.colors
+  -- The light palette has no warning-amber that reaches 3:1 on the cream
+  -- gutter, so the light warn sign uses the palette's own readable warning
+  -- presentation (dark ink on the pale warning tint, the same pair as
+  -- inputValidation.warning* / statusBar.warning*); dark keeps the amber
+  -- glyph on the plain gutter.
+  local is_light = palette.type == "light"
 
   local error = c["editorError.foreground"]
   local warn = c["editorWarning.foreground"]
@@ -24,7 +30,9 @@ function M.groups(palette)
 
     -- Gutter signs
     DiagnosticErrorSign = { fg = error, bg = gutter_bg },
-    DiagnosticWarnSign = { fg = warn, bg = gutter_bg },
+    DiagnosticWarnSign = is_light
+        and { fg = c["inputValidation.warningForeground"], bg = c["inputValidation.warningBackground"] }
+      or { fg = warn, bg = gutter_bg },
     DiagnosticInfoSign = { fg = info, bg = gutter_bg },
     DiagnosticHintSign = { fg = hint, bg = gutter_bg },
     DiagnosticOkSign = { fg = ok, bg = gutter_bg },
