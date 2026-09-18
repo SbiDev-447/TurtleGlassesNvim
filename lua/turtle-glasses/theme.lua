@@ -142,12 +142,16 @@ function M.build(palette, options)
   local opts = options or {}
   local map = {}
 
-  -- Order matters for collisions (later modules win).
+  -- Order matters for collisions (later modules win). Plugin integrations
+  -- are merged last, unconditionally (standard colorscheme practice: the
+  -- groups are harmless when the plugin is absent), so user overrides still
+  -- apply on top of them in the options layer below.
   local modules = {
     require("turtle-glasses.ui"),
     require("turtle-glasses.syntax"),
     require("turtle-glasses.treesitter"),
     require("turtle-glasses.lsp"),
+    require("turtle-glasses.plugins"),
   }
 
   for _, mod in ipairs(modules) do
