@@ -33,8 +33,9 @@ function M.groups(palette)
     VisualNOS = { bg = c["editor.inactiveSelectionBackground"] },
 
     -- Search / substitute (rendering decision: translucent bg from the VS Code
-    -- find-match keys; CurSearch uses the solid find-match marker color so the
-    -- current result stays legible on the dark background)
+    -- find-match keys; CurSearch uses the solid find-match marker color as bg
+    -- with the editor background as fg so the current result stays legible in
+    -- both variants)
     Search = { bg = c["editor.findMatchHighlightBackground"] },
     IncSearch = { bg = c["editor.findMatchBackground"] },
     CurSearch = { fg = c["editor.background"], bg = c["editorOverviewRuler.findMatchForeground"] },

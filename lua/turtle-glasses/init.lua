@@ -46,18 +46,10 @@ function M.load(variant)
 
   require("turtle-glasses.terminal").set_term_colors(palette)
 
-  if key == "dark" then
-    -- Phase 1: full dark variant coverage.
-    require("turtle-glasses.theme").build(palette, M.options)
-  else
-    -- Light variant: minimal apply so the scheme loads cleanly; full light
-    -- coverage lands in T2.
-    local colors = palette.colors
-    vim.api.nvim_set_hl(0, "Normal", {
-      fg = colors["editor.foreground"],
-      bg = M.options.transparent and "NONE" or colors["editor.background"],
-    })
-  end
+  -- Full coverage for both variants: every highlight group comes from the
+  -- shared palette-driven modules (ui/syntax/treesitter/lsp); the active
+  -- palette variant decides the colors, including the alpha-composite base.
+  require("turtle-glasses.theme").build(palette, M.options)
 end
 
 return M
