@@ -8,7 +8,14 @@
 -- Alpha handling: palette keys may carry 8-digit hex (e.g. "#b7cc8522").
 -- nvim_set_hl() does not accept 8-digit hex, so translucent colors are
 -- alpha-composited over the editor background at load time — the same result
--- VS Code shows over a flat background.
+-- VS Code shows over a flat background. The base comes from the active
+-- palette variant, so the same code serves dark and light transparently.
+--
+-- Options layer (applied in order, last wins):
+--   1. italics=false  — strips italic from every concrete group
+--   2. styles[family] — overrides the font style of a family of groups
+--   3. transparent    — chrome/editor line groups lose their bg
+--   4. overrides      — per-group merges applied last
 
 local M = {}
 
@@ -30,6 +37,66 @@ local function resolve_alpha(spec, base)
     local v = spec[key]
     if type(v) == "string" and v:match("^#[0-9a-fA-F]%x%x%x%x%x%x%x$") then
       spec[key] = composite_alpha(v, base)
+    end
+  end
+end
+
+-- Group families reachable through the `styles` option. The documented arrows
+-- map to explicit names plus wildcard patterns that expand against the groups
+-- actually present in the assembled map:
+--   comment  → Comment/@comment
+--   keyword  → Keyword/@keyword/@keyword.*
+--   function → Function/@function.*
+--   type     → Type/@type.*
+--   variable → @variable/Identifier
+--   operator → Operator/@operator
+--   string   → String/@string.*
+--   number   → Number/@number
+local FAMILY_PATTERNS = {
+  comment  = { "Comment", "@comment", "@comment.documentation" },
+  keyword  = { "Keyword", "@keyword", "^@keyword%." },
+  ["function"] = { "Function", "@function", "^@function%." },
+  type     = { "Type", "@type", "^@type%." },
+  variable = { "Identifier", "@variable" },
+  operator = { "Operator", "@operator" },
+  string   = { "String", "@string", "^@string%." },
+  number   = { "Number", "@number" },
+}
+
+--- Expand a family's explicit names + wildcard patterns to the groups in map.
+--- @param map table   group name -> highlight spec
+--- @param patterns table  list of literal names or Lua patterns (starting with ^)
+--- @return string[]       list of group names present in map
+local function family_groups(map, patterns)
+  local groups, seen = {}, {}
+  local function add(name)
+    if map[name] and not seen[name] then
+      seen[name] = true
+      groups[#groups + 1] = name
+    end
+  end
+  for _, entry in ipairs(patterns) do
+    if entry:sub(1, 1) == "^" then
+      for name in pairs(map) do
+        if name:match(entry) then
+          add(name)
+        end
+      end
+    else
+      add(entry)
+    end
+  end
+  return groups
+end
+
+--- Replace a group's font style with the given one ("NONE" clears all).
+local function apply_fontstyle(spec, fontstyle)
+  spec.italic = false
+  spec.bold = false
+  spec.underline = false
+  if fontstyle ~= "NONE" then
+    for part in fontstyle:gmatch("[^, ]+") do
+      spec[part] = true
     end
   end
 end
@@ -68,9 +135,9 @@ local TRANSPARENT_GROUPS = {
 }
 
 --- Build the full highlight group map for a palette variant.
---- @param palette table  a variant from lua/turtle-glasses/palette.lua (M.dark / M.light)
---- @param options table  the resolved plugin options (M.options from init.lua)
---- @return table         group name -> highlight spec (as accepted by nvim_set_hl)
+--- @param palette table   a variant from lua/turtle-glasses/palette.lua (M.dark / M.light)
+--- @param options table   the resolved plugin options (M.options from init.lua)
+--- @return table          group name -> highlight spec (as accepted by nvim_set_hl)
 function M.build(palette, options)
   local opts = options or {}
   local map = {}
@@ -91,6 +158,33 @@ function M.build(palette, options)
     end
   end
 
+  -- Options layer --------------------------------------------------
+
+  -- 1. italics master switch: strip EVERY italic font style.
+  if opts.italics == false then
+    for _, spec in pairs(map) do
+      if not spec.link then
+        spec.italic = false
+      end
+    end
+  end
+
+  -- 2. Per-family font style overrides. Linked groups are skipped here;
+  --    their targets belong to the same family so the style reaches them
+  --    through the link (nvim rejects link combined with other attributes).
+  for family, fontstyle in pairs(opts.styles or {}) do
+    local patterns = FAMILY_PATTERNS[family]
+    if patterns and type(fontstyle) == "string" then
+      for _, name in ipairs(family_groups(map, patterns)) do
+        local spec = map[name]
+        if not spec.link then
+          apply_fontstyle(spec, fontstyle)
+        end
+      end
+    end
+  end
+
+  -- 3. Transparent chrome: groups whose bg is decorative lose it.
   if opts.transparent then
     for _, name in ipairs(TRANSPARENT_GROUPS) do
       local spec = map[name]
@@ -102,10 +196,28 @@ function M.build(palette, options)
     end
   end
 
-  local base_hex = palette.colors["editor.background"] or "#000000"
+  -- 4. User overrides, applied LAST: merge over the group spec; when the
+  --    override (or the existing spec) is a link, apply it as a pure link
+  --    — nvim rejects link combined with color/attribute fields.
+  for name, ov in pairs(opts.overrides or {}) do
+    local base = map[name]
+    if ov.link then
+      map[name] = { link = ov.link }
+    elseif base and base.link then
+      map[name] = vim.deepcopy(ov)
+    else
+      map[name] = vim.tbl_deep_extend("force", base or {}, ov)
+    end
+  end
+
+  -- Resolve translucent hex and apply --------------------------------
+
+  local base_hex = palette.colors["editor.background"]
+  if not base_hex then
+    error("Turtle Glasses: palette missing 'editor.background'", 0)
+  end
 
   for name, spec in pairs(map) do
-    -- Links must not carry color attributes alongside.
     if not spec.link then
       resolve_alpha(spec, base_hex)
     end
