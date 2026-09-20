@@ -1,3 +1,5 @@
+![Banner](./TurtleGlassesNvim.webp)
+
 # Turtle Glasses — Neovim colorscheme
 
 A Neovim colorscheme faithfully ported from the [Turtle Glasses VS Code theme](https://github.com/SbiDev-447/TurtleGlassesVSCode), with dark and light variants at exact hex fidelity to the source.
