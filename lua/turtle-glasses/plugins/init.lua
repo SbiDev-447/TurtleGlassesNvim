@@ -19,6 +19,8 @@ function M.groups(palette, options)
     require("turtle-glasses.plugins.bufferline"),
     require("turtle-glasses.plugins.noice"),
     require("turtle-glasses.plugins.notify"),
+    require("turtle-glasses.plugins.nvim_tree"),
+    require("turtle-glasses.plugins.neo_tree"),
   }
 
   local merged = {}
