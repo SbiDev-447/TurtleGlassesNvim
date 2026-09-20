@@ -107,15 +107,18 @@ end
 -- content: when options.transparent is enabled these lose their bg entirely.
 local TRANSPARENT_GROUPS = {
   "Normal",
+  "NormalNC",
   "NormalFloat",
   "FloatBorder",
   "FloatTitle",
   "LineNr",
   "CursorLineNr",
   "CursorLine",
+  "CursorLineNC",
   "CursorColumn",
   "ColorColumn",
   "SignColumn",
+  "SignColumnNC",
   "FoldColumn",
   "Folded",
   "WinSeparator",
@@ -237,6 +240,26 @@ function M.build(palette, options)
       resolve_alpha(spec, base_hex)
     end
     vim.api.nvim_set_hl(0, name, spec)
+  end
+
+  -- Dim-inactive support: keep vim.wo.dim_inactive on for every window entered
+  -- after the theme loads (re-runs of build() reuse the same augroup, so the
+  -- autocmd stays idempotent). The window option only exists in nvim >= 0.11;
+  -- on older versions (>= 0.9 per the plugin requirements) the dimmed *NC
+  -- groups stay defined — harmless and unused — and the option is skipped.
+  if opts.dim_inactive then
+    local supported = pcall(function()
+      vim.wo.dim_inactive = true
+    end)
+    if supported then
+      local augroup = vim.api.nvim_create_augroup("TurtleGlassesDimInactive", { clear = true })
+      vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter" }, {
+        group = augroup,
+        callback = function()
+          vim.wo.dim_inactive = true
+        end,
+      })
+    end
   end
 
   return map
