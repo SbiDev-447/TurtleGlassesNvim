@@ -22,11 +22,18 @@ local M = {}
 ---                         --   bold=, underline=, sp=, link=}; merged over the
 ---                         --   group spec and applied LAST; `link` is applied
 ---                         --   as a link-only override.
+---   variants    = {}     -- map "dark"|"light" -> option table; the fields
+---                         --   of the variant table are deep-merged OVER the
+---                         --   global options when that variant loads, so a
+---                         --   variant can override transparent/italics/
+---                         --   styles/overrides without repeating the rest
+--                         --   (e.g. { variants = { light = { transparent = true } } })
 M.options = {
   transparent = false,
   italics = true,
   styles = {},
   overrides = {},
+  variants = {},
 }
 
 --- Configure Turtle Glasses. Deep-merges the given options over the defaults.
