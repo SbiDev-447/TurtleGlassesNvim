@@ -27,13 +27,17 @@ local M = {}
 ---                         --   global options when that variant loads, so a
 ---                         --   variant can override transparent/italics/
 ---                         --   styles/overrides without repeating the rest
---                         --   (e.g. { variants = { light = { transparent = true } } })
+---                         --   (e.g. { variants = { light = { transparent = true } } })
+---   dim_inactive = false  -- boolean: when true, inactive windows render the
+---                         --   dimmed *NC chrome (NormalNC / SignColumnNC /
+---                         --   CursorLineNC) and vim.wo.dim_inactive is set
 M.options = {
   transparent = false,
   italics = true,
   styles = {},
   overrides = {},
   variants = {},
+  dim_inactive = false,
 }
 
 --- Configure Turtle Glasses. Deep-merges the given options over the defaults.
