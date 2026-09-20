@@ -10,7 +10,7 @@ A Neovim colorscheme faithfully ported from the [Turtle Glasses VS Code theme](h
 - Exact palette fidelity: every color comes verbatim from the Turtle Glasses VS Code theme JSONs.
 - Lua-only implementation, no external dependencies.
 - Options: transparent background, italics master switch, per-family font styles, per-group overrides, per-variant options, and dim-inactive windows.
-- Built-in integrations: telescope.nvim, lualine.nvim, gitsigns.nvim, which-key.nvim, nvim-cmp, indent-blankline.nvim, bufferline.nvim, nvim-noice, nvim-notify, nvim-tree.lua, neo-tree.nvim, nvim-dap-ui, flash.nvim, and mini.nvim are supported out of the box.
+- Built-in integrations: telescope.nvim, lualine.nvim, gitsigns.nvim, which-key.nvim, nvim-cmp, indent-blankline.nvim, bufferline.nvim, nvim-noice, nvim-notify, nvim-tree.lua, neo-tree.nvim, nvim-dap-ui, flash.nvim, mini.nvim, snacks.nvim, trouble.nvim, aerial.nvim, render-markdown.nvim, and toggleterm.nvim are supported out of the box.
 - Zero hardcoded colors: `lua/turtle-glasses/palette.lua` is generated from the source theme and can be regenerated at any time.
 
 ## Requirements
@@ -153,6 +153,11 @@ require("turtle-glasses").setup({ dim_inactive = true })
 | nvim-dap-ui | `DapUI*` watches, frames, breakpoints, and floating elements |
 | flash.nvim | `FlashLabel`, `FlashMatch`, `FlashCurrent`, `FlashPrompt*` |
 | mini.nvim | `MiniIndentscope*` (incl. light syntax) and `MiniStatusline*` mode chips |
+| snacks.nvim | `SnacksNormal`/`WinBar` chrome, notifier (incl. severity matrix), dashboard, statuscolumn, indent (1-8), input, picker (file/git/undo/lsp kinds) |
+| trouble.nvim | `Trouble*` window, list, count, directory/icon rows (severities reuse `Diagnostic*`) |
+| aerial.nvim | `AerialLine`/`AerialGuide`, kind icons mapped to the `symbolIcon.*` palette family |
+| render-markdown.nvim | `RenderMarkdownH1`-`H6` + `Bg`, code/inline surfaces, tables, quote depth, checkboxes, callout severities |
+| toggleterm.nvim | `ToggleTerm1`-`4` float trio, `Normal`, `SignColumn`, `EndOfBuffer` in the `terminal.*` family |
 
 All integrations are applied unconditionally at load time — the groups are harmless when the plugin is absent, so nothing extra is required.
 
