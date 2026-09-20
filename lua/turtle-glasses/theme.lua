@@ -12,6 +12,8 @@
 -- palette variant, so the same code serves dark and light transparently.
 --
 -- Options layer (applied in order, last wins):
+--   0. variants[variant] — deep-merged over the global options so a variant
+--      can override any option without repeating the rest
 --   1. italics=false  — strips italic from every concrete group
 --   2. styles[family] — overrides the font style of a family of groups
 --   3. transparent    — chrome/editor line groups lose their bg
@@ -140,6 +142,15 @@ local TRANSPARENT_GROUPS = {
 --- @return table          group name -> highlight spec (as accepted by nvim_set_hl)
 function M.build(palette, options)
   local opts = options or {}
+
+  -- 0. Per-variant options: deep-merge the variant's option table over the
+  --    global options so variant styles/overrides win. The palette's `type`
+  --    ("dark" / "light") selects the variant the same way load() does.
+  local variant_opts = (opts.variants or {})[palette.type]
+  if variant_opts then
+    opts = vim.tbl_deep_extend("force", opts, variant_opts)
+  end
+
   local map = {}
 
   -- Order matters for collisions (later modules win). Plugin integrations

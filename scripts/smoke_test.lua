@@ -103,6 +103,17 @@ load("dark")
 
 expect_color("Comment", "fg", "#ff0000")
 
+-- Per-variant options: the variant's option table deep-merges OVER the global
+-- options, so a dark-only override wins on dark while light keeps the global.
+require("turtle-glasses").setup({
+  overrides = { Comment = { fg = "#ffffff" } },
+  variants = { dark = { overrides = { Comment = { fg = "#123456" } } } },
+})
+load("dark")
+expect_color("Comment", "fg", "#123456")
+load("light")
+expect_color("Comment", "fg", "#ffffff")
+
 -- Summary --------------------------------------------------------------------
 if #failures > 0 then
   for _, f in ipairs(failures) do
