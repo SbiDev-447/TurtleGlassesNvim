@@ -39,6 +39,11 @@
 --       — unfocused status lines are intentionally dimmed chrome
 --         (StatusLineTermNC is nvim's default link onto StatusLineNC for the
 --         terminal status line).
+--   * BufferLineSeparator, BufferLineSeparatorVisible, BufferLineSeparatorSelected
+--       — bufferline's powerline-style separators between neighbouring tabs:
+--         the fg is the palette's tab-border tone sitting on the tab
+--         background, so the triangle renders as a bisecting gradient, exactly
+--         like the Lualine separators below.
 --   * LualineASep, LualineBSep, LualineCSep,
 --     LualineAModeSep, LualineBModeSep, LualineCModeSep
 --       — powerline separators: fg equals the neighbouring section's bg by
@@ -92,6 +97,8 @@ local ALLOWLIST = {
   "WhichKeySeparator", "TelescopePromptCounter",
   -- Inactive chrome
   "StatusLineNC", "StatusLineTermNC",
+  -- Bufferline powerline separator gradients
+  "BufferLineSeparator", "BufferLineSeparatorVisible", "BufferLineSeparatorSelected",
   -- Powerline separator gradient triangles
   "LualineASep", "LualineBSep", "LualineCSep",
   "LualineAModeSep", "LualineBModeSep", "LualineCModeSep",

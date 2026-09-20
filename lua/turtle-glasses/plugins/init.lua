@@ -16,6 +16,9 @@ function M.groups(palette, options)
     require("turtle-glasses.plugins.whichkey"),
     require("turtle-glasses.plugins.cmp"),
     require("turtle-glasses.plugins.indent_blankline"),
+    require("turtle-glasses.plugins.bufferline"),
+    require("turtle-glasses.plugins.noice"),
+    require("turtle-glasses.plugins.notify"),
   }
 
   local merged = {}
