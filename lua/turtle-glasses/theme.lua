@@ -54,6 +54,9 @@ end
 --   operator → Operator/@operator
 --   string   → String/@string.*
 --   number   → Number/@number
+--   constant → Constant/@constant.*
+--   label    → Label/@label
+--   title    → Title/@markup.heading.*
 local FAMILY_PATTERNS = {
   comment  = { "Comment", "@comment", "@comment.documentation" },
   keyword  = { "Keyword", "@keyword", "^@keyword%." },
@@ -63,6 +66,9 @@ local FAMILY_PATTERNS = {
   operator = { "Operator", "@operator" },
   string   = { "String", "@string", "^@string%." },
   number   = { "Number", "@number" },
+  constant = { "Constant", "@constant", "^@constant%." },
+  label    = { "Label", "@label" },
+  title    = { "Title", "@markup.heading", "^@markup%.heading%." },
 }
 
 --- Expand a family's explicit names + wildcard patterns to the groups in map.

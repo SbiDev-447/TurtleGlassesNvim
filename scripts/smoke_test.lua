@@ -114,6 +114,14 @@ expect_color("Comment", "fg", "#123456")
 load("light")
 expect_color("Comment", "fg", "#ffffff")
 
+-- Styles option: constant / label / title families apply to present groups.
+require("turtle-glasses").setup({ styles = { constant = "bold", label = "italic", title = "underline" } })
+load("dark")
+
+expect_attr("Constant", "bold", true)
+expect_attr("Label", "italic", true)
+expect_attr("Title", "underline", true)
+
 -- dim_inactive option: inactive-window chrome exists, dimmer than Normal, and
 -- the option flips vim.wo.dim_inactive on at load time (nvim >= 0.11 only).
 require("turtle-glasses").setup({ dim_inactive = true })

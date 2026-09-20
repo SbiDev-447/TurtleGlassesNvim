@@ -59,6 +59,7 @@ function M.groups(palette)
     Function = { fg = tfg("Function") },
     Tag = { fg = tfg("Tag - HTML/JSX/XML") },
     Label = { fg = palette.semanticTokenColors and palette.semanticTokenColors.label or c["editorLink.activeForeground"] },
+    Title = { fg = c["editorLink.activeForeground"] },
 
     -- Statements / keywords
     Statement = { fg = tfg("Control Keyword") },
