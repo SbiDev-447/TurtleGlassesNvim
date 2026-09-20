@@ -2,6 +2,8 @@
 
 A Neovim colorscheme faithfully ported from the [Turtle Glasses VS Code theme](https://github.com/SbiDev-447/TurtleGlassesVSCode), with dark and light variants at exact hex fidelity to the source.
 
+![CI](https://github.com/SbiDev-447/TurtleGlassesNvim/actions/workflows/ci.yml/badge.svg)
+
 ## Features
 
 - Two variants: `turtle-glasses-dark` and `turtle-glasses-light`.
