@@ -25,6 +25,7 @@ function M.groups(palette, options)
     require("turtle-glasses.plugins.flash"),
     require("turtle-glasses.plugins.mini"),
     require("turtle-glasses.plugins.snacks"),
+    require("turtle-glasses.plugins.trouble"),
   }
 
   local merged = {}
