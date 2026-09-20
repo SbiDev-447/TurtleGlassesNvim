@@ -44,6 +44,9 @@
 --         the fg is the palette's tab-border tone sitting on the tab
 --         background, so the triangle renders as a bisecting gradient, exactly
 --         like the Lualine separators below.
+--   * NeoTreeTabSeparatorActive, NeoTreeTabSeparatorInactive
+--       — neo-tree's renderer separators between tabs: same powerline-style
+--         gradient rationale as the Lualine/BufferLine separators above.
 --   * LualineASep, LualineBSep, LualineCSep,
 --     LualineAModeSep, LualineBModeSep, LualineCModeSep
 --       — powerline separators: fg equals the neighbouring section's bg by
@@ -99,6 +102,8 @@ local ALLOWLIST = {
   "StatusLineNC", "StatusLineTermNC",
   -- Bufferline powerline separator gradients
   "BufferLineSeparator", "BufferLineSeparatorVisible", "BufferLineSeparatorSelected",
+  -- Neo-tree renderer separator gradients
+  "NeoTreeTabSeparatorActive", "NeoTreeTabSeparatorInactive",
   -- Powerline separator gradient triangles
   "LualineASep", "LualineBSep", "LualineCSep",
   "LualineAModeSep", "LualineBModeSep", "LualineCModeSep",
