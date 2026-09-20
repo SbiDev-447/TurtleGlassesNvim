@@ -114,6 +114,19 @@ expect_color("Comment", "fg", "#123456")
 load("light")
 expect_color("Comment", "fg", "#ffffff")
 
+-- dim_inactive option: inactive-window chrome exists, dimmer than Normal, and
+-- the option flips vim.wo.dim_inactive on at load time (nvim >= 0.11 only).
+require("turtle-glasses").setup({ dim_inactive = true })
+load("dark")
+
+expect_color("NormalNC", "fg", "#5c6170")
+expect_color("SignColumnNC", "fg", "#5c6170")
+
+checks = checks + 1
+if pcall(function() vim.wo.dim_inactive = true end) and not vim.wo.dim_inactive then
+  fail("dim_inactive sets vim.wo.dim_inactive", tostring(vim.wo.dim_inactive))
+end
+
 -- Summary --------------------------------------------------------------------
 if #failures > 0 then
   for _, f in ipairs(failures) do

@@ -21,6 +21,12 @@ function M.groups(palette)
     FloatBorder = { fg = c["editorHoverWidget.border"], bg = "NONE" },
     FloatTitle = { fg = c["editorHoverWidget.foreground"], bg = "NONE" },
 
+    -- Inactive-window chrome (used when nvim.wo.dim_inactive is on): text
+    -- falls back to the dim description tone, the gutter/signs follow suit
+    NormalNC = { fg = c["descriptionForeground"], bg = c["editor.background"] },
+    SignColumnNC = { fg = c["descriptionForeground"], bg = c["editorGutter.background"] },
+    CursorLineNC = { bg = c["editor.lineHighlightBorder"] },
+
     -- Cursor
     Cursor = { fg = is_light and c["editor.foreground"] or c["editorCursor.background"], bg = c["editorCursor.foreground"] },
     CursorIM = { fg = is_light and c["editor.foreground"] or c["editorCursor.background"], bg = c["editorCursor.foreground"] },
